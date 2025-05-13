@@ -28,10 +28,19 @@ app.get("/", async (req, res) => {
 app.post("/", async (req, res) => {
   try {
     console.log(req.body);
-    const response = await axios.post(`https://bored-api.appbrewery.com/filter?type=${type}&participants=${participants}`)
+    let type= req.body.type
+    let participants = req.body.participants
+    const response = await axios.get(`https://bored-api.appbrewery.com/filter?type=${type}&participants=${participants}`)
+    const check = response.data
+    res.render("index.ejs",{random: check[Math.floor(Math.random() * check.length)]})
+    // console.log(check)
+
     
   } catch (error) {
-    
+    console.error("Failed to make request:", error.message);
+    res.render("index.ejs", {
+       error: "No activities that match your criteria.",
+    });
   }
   
   // Step 2: Play around with the drop downs and see what gets logged.
